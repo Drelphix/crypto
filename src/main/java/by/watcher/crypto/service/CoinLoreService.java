@@ -1,12 +1,15 @@
 package by.watcher.crypto.service;
 
-import by.watcher.crypto.model.currency.Currency;
+import by.watcher.crypto.model.entities.CoinLoreCurrency;
+import by.watcher.crypto.model.entities.Currency;
 
 import java.util.List;
 
 public interface CoinLoreService {
 
-    long getCurrencyCount();
-    List<Currency> getCurrency();
+    CoinLoreCurrency getCurrencyById(long id);
+
+    List<CoinLoreCurrency> getAllCurrencyFromList(List<Currency> currencyList);
+
 
 }

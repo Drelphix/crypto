@@ -1,0 +1,44 @@
+package by.watcher.crypto.config;
+
+import by.watcher.crypto.model.entities.CoinLoreCurrency;
+import by.watcher.crypto.model.entities.Currency;
+import by.watcher.crypto.model.entities.Price;
+import by.watcher.crypto.service.CoinLoreService;
+import by.watcher.crypto.service.CurrencyService;
+import by.watcher.crypto.service.PriceService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@EnableScheduling
+@Component
+public class ScheduleTask {
+    private static final Logger logger = LogManager.getLogger();
+
+    @Autowired
+    private CoinLoreService coinLoreService;
+    @Autowired
+    private CurrencyService currencyService;
+    @Autowired
+    private PriceService priceService;
+
+    @Scheduled(fixedRate = 60000)
+    public void getCoinLoreInfo() {
+            List<Currency> currencies = currencyService.getAll();
+            List<CoinLoreCurrency> coinLoreCurrencies = coinLoreService.getAllCurrencyFromList(currencies);
+            List<Price> prices = new ArrayList<>();
+            for (int i = 0; i < currencies.size(); i++) {
+                long id = coinLoreCurrencies.get(i).getId();
+                double price = coinLoreCurrencies.get(i).getPriceUsd();
+                prices.add(new Price(id, price));
+            }
+            priceService.saveAll(prices);
+
+    }
+}
