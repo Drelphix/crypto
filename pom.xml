@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>by.watcher</groupId>
 	<artifactId>crypto</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>crypto</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Crypto Currency watcher</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -41,7 +41,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>2.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>2.2.6.RELEASE</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
