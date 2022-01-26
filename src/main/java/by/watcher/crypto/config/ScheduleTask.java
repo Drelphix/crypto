@@ -44,6 +44,7 @@ public class ScheduleTask {
                 prices.add(new Price(id, price));
             }
             priceService.saveAll(prices);
+            userService.checkUserPrice(prices);
         } catch (ApiException e) {
             LOGGER.error(e);
         }

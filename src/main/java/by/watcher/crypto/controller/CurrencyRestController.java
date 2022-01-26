@@ -3,6 +3,7 @@ package by.watcher.crypto.controller;
 import by.watcher.crypto.exception.UserServiceException;
 import by.watcher.crypto.message.Message;
 import by.watcher.crypto.model.entities.Currency;
+import by.watcher.crypto.model.entities.Price;
 import by.watcher.crypto.model.entities.User;
 import by.watcher.crypto.model.repository.PriceRepository;
 import by.watcher.crypto.service.CoinLoreService;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +50,7 @@ public class CurrencyRestController {
         }
     }
 
-    @RequestMapping(value = "/getById", method = RequestMethod.GET)
+    @RequestMapping(value = "/getById")
     public ResponseEntity<PriceView> getCryptoCurrencyById(@RequestParam(value = "id") long id) {
         Optional<Currency> currency = currencyService.getCurrencyById(id);
         try {
@@ -59,7 +59,7 @@ public class CurrencyRestController {
                 long currencyId = currencyHolder.getId();
                 String symbol = currencyHolder.getSymbol();
                 double price = priceRepository.getActualPriceByIdCurrency(currencyId).getPrice();
-                PriceView priceView = new PriceView(currencyHolder.getId(), currencyHolder.getSymbol(), price);
+                PriceView priceView = new PriceView(currencyId, symbol, price);
                 return new ResponseEntity<>(priceView, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -68,16 +68,16 @@ public class CurrencyRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/notify", method = RequestMethod.POST)
+    @RequestMapping(value = "/notify")
     public ResponseEntity<String> notify(@RequestParam(value = "username") String username, @RequestParam(value = "symbol") String symbol) {
         if (!currencyValidator.validateSymbol(symbol)) {
-            LOGGER.error(Message.VALIDATING_SYMBOL_ERROR + symbol);
+            LOGGER.error(Message.VALIDATING_SYMBOL_ERROR+ symbol);
             return new ResponseEntity<>(Message.VALIDATING_SYMBOL_ERROR + symbol, HttpStatus.BAD_REQUEST);
         }
         try {
             User user = userService.registerUser(username, symbol);
-            userService.addCurrentPriceToUser(user);
-            return new ResponseEntity<>(Message.SUCCESS, HttpStatus.OK);
+            Price price = userService.addCurrentPriceToUser(user);
+            return new ResponseEntity<>(Message.SUCCESS+" username: "+username+"; symbol: "+symbol+"; price: "+ price.getPrice(), HttpStatus.OK);
         } catch (UserServiceException e) {
             LOGGER.error(Message.GET_CRYPTO_CURRENCY_BY_SYMBOL_ERROR);
             return new ResponseEntity<>(Message.GET_CRYPTO_CURRENCY_BY_SYMBOL_ERROR, HttpStatus.BAD_REQUEST);

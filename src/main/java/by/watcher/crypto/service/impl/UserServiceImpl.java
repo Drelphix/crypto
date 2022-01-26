@@ -2,7 +2,6 @@ package by.watcher.crypto.service.impl;
 
 import by.watcher.crypto.exception.UserServiceException;
 import by.watcher.crypto.message.Message;
-import by.watcher.crypto.model.entities.CoinLoreCurrency;
 import by.watcher.crypto.model.entities.Currency;
 import by.watcher.crypto.model.entities.Price;
 import by.watcher.crypto.model.entities.User;
@@ -15,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,10 +44,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addCurrentPriceToUser(User user) {
+    public Price addCurrentPriceToUser(User user) {
         long currencyId = user.getCurrency().getId();
         Price price  = priceService.getActualPriceByIdCurrency(currencyId);
         user.setPrice(price);
+        return price;
     }
 
     @Override
@@ -64,10 +65,12 @@ public class UserServiceImpl implements UserService {
             for (Price price : prices) {
                 if (currencyId == price.getIdCurrency()) {
                     double currentPrice = price.getPrice();
-                    if (Math.abs(userPrice / currentPrice) * 100 >= 1) {
-                        LOGGER.warn("Price change more than 1% for user: " + user.getName() + ", From: " + userPrice + " to " + currentPrice);
+                    double percent = userPrice / currentPrice;
+                    if (percent >= 1.001 || percent <= 0.999) {
+                        LOGGER.warn(MessageFormat.format("Price change more than 1% for user: {0} , From: {1} to {2}",user.getName(), userPrice, currentPrice));
                         return true;
                     }
+                    return false;
                 }
             }
         }

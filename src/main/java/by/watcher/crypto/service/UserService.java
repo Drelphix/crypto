@@ -11,7 +11,7 @@ public interface UserService {
 
     User registerUser(String username, String symbol) throws UserServiceException;
 
-    void addCurrentPriceToUser(User user);
+    Price addCurrentPriceToUser(User user);
 
     List<User> getAll();
 
