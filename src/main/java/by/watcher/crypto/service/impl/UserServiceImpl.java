@@ -8,6 +8,7 @@ import by.watcher.crypto.model.entities.Price;
 import by.watcher.crypto.model.entities.User;
 import by.watcher.crypto.service.CoinLoreService;
 import by.watcher.crypto.service.CurrencyService;
+import by.watcher.crypto.service.PriceService;
 import by.watcher.crypto.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +28,8 @@ public class UserServiceImpl implements UserService {
     private CurrencyService currencyService;
     @Autowired
     private CoinLoreService coinLoreService;
+    @Autowired
+    private PriceService priceService;
 
     @Override
     public User registerUser(String username, String symbol) throws UserServiceException {
@@ -43,10 +46,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addCurrentPriceToUser(User user) {
         long currencyId = user.getCurrency().getId();
-        CoinLoreCurrency currency = coinLoreService.getCurrencyById(currencyId);
-        Price price = user.getPrice();
-        price.setPrice(currency.getPriceUsd());
-        price.setIdCurrency(currency.getId());
+        Price price  = priceService.getActualPriceByIdCurrency(currencyId);
+        user.setPrice(price);
     }
 
     @Override

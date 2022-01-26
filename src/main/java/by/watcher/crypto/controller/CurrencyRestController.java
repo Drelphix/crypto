@@ -68,8 +68,8 @@ public class CurrencyRestController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity<String> registerUser(@RequestParam(value = "username") String username, @RequestParam(value = "symbol") String symbol) {
+    @RequestMapping(value = "/notify", method = RequestMethod.POST)
+    public ResponseEntity<String> notify(@RequestParam(value = "username") String username, @RequestParam(value = "symbol") String symbol) {
         if (!currencyValidator.validateSymbol(symbol)) {
             LOGGER.error(Message.VALIDATING_SYMBOL_ERROR + symbol);
             return new ResponseEntity<>(Message.VALIDATING_SYMBOL_ERROR + symbol, HttpStatus.BAD_REQUEST);
