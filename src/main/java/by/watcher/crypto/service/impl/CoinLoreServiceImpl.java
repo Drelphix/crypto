@@ -8,11 +8,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CoinLoreServiceImpl implements CoinLoreService { //todo
+public class CoinLoreServiceImpl implements CoinLoreService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String COIN_LORE_API_LINK= "https://api.coinlore.net/api/ticker/?id=";
 

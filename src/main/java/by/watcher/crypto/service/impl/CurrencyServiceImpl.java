@@ -18,12 +18,19 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     public List<Currency> getAll() {
-        return currencyRepository;
+        List<Currency> currencyList = new ArrayList<>();
+        currencyList.addAll(currencyRepository);
+        return currencyList;
     }
 
     @Override
     public Optional<Currency> getCurrencyById(long id) {
         return currencyRepository.stream().filter(currency -> currency.getId() == id).findFirst();
+    }
+
+    @Override
+    public Optional<Currency> findCurrencyBySymbol(String symbol) {
+        return currencyRepository.stream().filter(currency -> currency.getSymbol().equals(symbol)).findFirst();
     }
 
 }

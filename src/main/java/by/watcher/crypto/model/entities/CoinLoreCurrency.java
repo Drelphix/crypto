@@ -34,4 +34,33 @@ public class CoinLoreCurrency {
         this.id = id;
         this.priceUsd = priceUsd;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CoinLoreCurrency that = (CoinLoreCurrency) o;
+
+        if (id != that.id) return false;
+        return Double.compare(that.priceUsd, priceUsd) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = (int) (id ^ (id >>> 32));
+        temp = Double.doubleToLongBits(priceUsd);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CoinLoreCurrency{" +
+                "id=" + id +
+                ", priceUsd=" + priceUsd +
+                '}';
+    }
 }

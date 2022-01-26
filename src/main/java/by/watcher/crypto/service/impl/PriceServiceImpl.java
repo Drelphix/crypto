@@ -22,4 +22,9 @@ public class PriceServiceImpl implements PriceService {
     public Price getActualPriceByIdCurrency(long id) {
         return priceRepository.getActualPriceByIdCurrency(id);
     }
+
+    @Override
+    public Price savePrice(Price price) {
+        return priceRepository.save(price);
+    }
 }

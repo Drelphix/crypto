@@ -1,26 +1,14 @@
-package by.watcher.crypto.model.entities;
+package by.watcher.crypto.viev;
 
-import javax.persistence.*;
+public class PriceView {
 
-@Entity
-@Table
-public class Price {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(nullable = false)
-    private long idCurrency;
-
-    @Column(nullable = false)
+    private String symbol;
     private double price;
 
-    public Price() {
-    }
-
-    public Price(long idCurrency, double price) {
-        this.idCurrency = idCurrency;
+    public PriceView(long id, String symbol, double price) {
+        this.id = id;
+        this.symbol = symbol;
         this.price = price;
     }
 
@@ -32,12 +20,12 @@ public class Price {
         this.id = id;
     }
 
-    public long getIdCurrency() {
-        return idCurrency;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setIdCurrency(long idCurrency) {
-        this.idCurrency = idCurrency;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     public double getPrice() {
@@ -53,11 +41,11 @@ public class Price {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Price price1 = (Price) o;
+        PriceView priceView = (PriceView) o;
 
-        if (id != price1.id) return false;
-        if (idCurrency != price1.idCurrency) return false;
-        return Double.compare(price1.price, price) == 0;
+        if (id != priceView.id) return false;
+        if (Double.compare(priceView.price, price) != 0) return false;
+        return symbol.equals(priceView.symbol);
     }
 
     @Override
@@ -65,7 +53,7 @@ public class Price {
         int result;
         long temp;
         result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (idCurrency ^ (idCurrency >>> 32));
+        result = 31 * result + symbol.hashCode();
         temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
@@ -73,9 +61,9 @@ public class Price {
 
     @Override
     public String toString() {
-        return "Price{" +
+        return "PriceView{" +
                 "id=" + id +
-                ", idCurrency=" + idCurrency +
+                ", symbol='" + symbol + '\'' +
                 ", price=" + price +
                 '}';
     }
