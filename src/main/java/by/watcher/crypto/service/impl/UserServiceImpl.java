@@ -32,10 +32,10 @@ public class UserServiceImpl implements UserService {
     public User registerUser(String username, String symbol) throws UserServiceException {
         Optional<Currency> currency = currencyService.findCurrencyBySymbol(symbol);
         Currency currencyHolder;
-        if(currency.isPresent()){
+        if (currency.isPresent()) {
             currencyHolder = currency.get();
         } else throw new UserServiceException(Message.GET_CRYPTO_CURRENCY_BY_SYMBOL_ERROR);
-        User user = new User(username, currencyHolder,new Price());
+        User user = new User(username, currencyHolder, new Price());
         userRepository.add(user);
         return user;
     }
@@ -51,21 +51,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        List<User> userList = new ArrayList<>();
-        userList.addAll(userRepository);
+        List<User> userList = new ArrayList<>(userRepository);
         return userList;
     }
 
     @Override
     public boolean checkUserPrice(List<Price> prices) {
-        for (User user: userRepository){
+        for (User user : userRepository) {
             long currencyId = user.getCurrency().getId();
             double userPrice = user.getPrice().getPrice();
-            for (Price price : prices){
-                if(currencyId==price.getIdCurrency()){
+            for (Price price : prices) {
+                if (currencyId == price.getIdCurrency()) {
                     double currentPrice = price.getPrice();
-                    if(Math.abs(userPrice/currentPrice)*100>=1){
-                        LOGGER.warn("Price change more than 1% for user: "+user.getName()+", From: "+userPrice+" to "+currentPrice);
+                    if (Math.abs(userPrice / currentPrice) * 100 >= 1) {
+                        LOGGER.warn("Price change more than 1% for user: " + user.getName() + ", From: " + userPrice + " to " + currentPrice);
+                        return true;
                     }
                 }
             }

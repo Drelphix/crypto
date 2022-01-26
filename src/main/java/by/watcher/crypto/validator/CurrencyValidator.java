@@ -12,10 +12,10 @@ public class CurrencyValidator {
     @Autowired
     CurrencyService currencyService;
 
-    public boolean validateSymbol(String symbol){
+    public boolean validateSymbol(String symbol) {
         List<Currency> currencyList = currencyService.getAll();
-        for(Currency currency : currencyList){
-            if(currency.getSymbol().equals(symbol)){
+        for (Currency currency : currencyList) {
+            if (currency.getSymbol().equals(symbol)) {
                 return true;
             }
         }

@@ -11,6 +11,14 @@ public class CoinLoreCurrency {
     @JsonProperty("price_usd")
     private double priceUsd;
 
+    public CoinLoreCurrency() {
+    }
+
+    public CoinLoreCurrency(long id, double priceUsd) {
+        this.id = id;
+        this.priceUsd = priceUsd;
+    }
+
     public long getId() {
         return id;
     }
@@ -24,14 +32,6 @@ public class CoinLoreCurrency {
     }
 
     public void setPriceUsd(double priceUsd) {
-        this.priceUsd = priceUsd;
-    }
-
-    public CoinLoreCurrency() {
-    }
-
-    public CoinLoreCurrency(long id, double priceUsd) {
-        this.id = id;
         this.priceUsd = priceUsd;
     }
 

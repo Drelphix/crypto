@@ -1,8 +1,6 @@
 package by.watcher.crypto.exception;
 
-import java.security.PrivilegedActionException;
-
-public class UserServiceException extends Exception{
+public class UserServiceException extends Exception {
 
     public UserServiceException() {
         super();

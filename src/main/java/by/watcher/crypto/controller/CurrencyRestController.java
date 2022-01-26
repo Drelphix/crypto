@@ -9,7 +9,7 @@ import by.watcher.crypto.service.CoinLoreService;
 import by.watcher.crypto.service.CurrencyService;
 import by.watcher.crypto.service.UserService;
 import by.watcher.crypto.validator.CurrencyValidator;
-import by.watcher.crypto.viev.PriceView;
+import by.watcher.crypto.view.PriceView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,17 +42,16 @@ public class CurrencyRestController {
     @RequestMapping(value = "/getAll")
     public ResponseEntity<Iterable<Currency>> getCryptoCurrencyList() {
 
-        try{
-            return new ResponseEntity<Iterable<Currency>>(currencyService.getAll(), HttpStatus.OK);
-        }
-        catch (Exception e){
+        try {
+            return new ResponseEntity<>(currencyService.getAll(), HttpStatus.OK);
+        } catch (Exception e) {
             LOGGER.error(Message.GET_CRYPTO_CURRENCY_LIST_ERROR, e);
-            return new ResponseEntity<Iterable<Currency>>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @RequestMapping(value = "/getById", method = RequestMethod.GET)
-    public ResponseEntity<PriceView> getCryptoCurrencyById(@RequestParam(value="id") long id) {
+    public ResponseEntity<PriceView> getCryptoCurrencyById(@RequestParam(value = "id") long id) {
         Optional<Currency> currency = currencyService.getCurrencyById(id);
         try {
             if (currency.isPresent()) {
@@ -61,27 +60,27 @@ public class CurrencyRestController {
                 String symbol = currencyHolder.getSymbol();
                 double price = priceRepository.getActualPriceByIdCurrency(currencyId).getPrice();
                 PriceView priceView = new PriceView(currencyHolder.getId(), currencyHolder.getSymbol(), price);
-                return new ResponseEntity<PriceView>(priceView, HttpStatus.OK);
+                return new ResponseEntity<>(priceView, HttpStatus.OK);
             }
         } catch (Exception e) {
             LOGGER.error(Message.GET_CRYPTO_CURRENCY_BY_ID_ERROR, e);
         }
-        return new ResponseEntity<PriceView>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity<String> registerUser(@RequestParam(value = "username") String username, @RequestParam(value = "symbol") String symbol){
-        if(!currencyValidator.validateSymbol(symbol)){
-            LOGGER.error(Message.VALIDATING_SYMBOL_ERROR+symbol);
-            return new ResponseEntity<String>(Message.VALIDATING_SYMBOL_ERROR+symbol,HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> registerUser(@RequestParam(value = "username") String username, @RequestParam(value = "symbol") String symbol) {
+        if (!currencyValidator.validateSymbol(symbol)) {
+            LOGGER.error(Message.VALIDATING_SYMBOL_ERROR + symbol);
+            return new ResponseEntity<>(Message.VALIDATING_SYMBOL_ERROR + symbol, HttpStatus.BAD_REQUEST);
         }
         try {
-            User user = userService.registerUser(username,symbol);
+            User user = userService.registerUser(username, symbol);
             userService.addCurrentPriceToUser(user);
-            return new ResponseEntity<String>(Message.SUCCESS, HttpStatus.OK);
+            return new ResponseEntity<>(Message.SUCCESS, HttpStatus.OK);
         } catch (UserServiceException e) {
             LOGGER.error(Message.GET_CRYPTO_CURRENCY_BY_SYMBOL_ERROR);
-            return new ResponseEntity<String>(Message.GET_CRYPTO_CURRENCY_BY_SYMBOL_ERROR, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Message.GET_CRYPTO_CURRENCY_BY_SYMBOL_ERROR, HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -1,5 +1,6 @@
 package by.watcher.crypto.config;
 
+import by.watcher.crypto.exception.ApiException;
 import by.watcher.crypto.model.entities.CoinLoreCurrency;
 import by.watcher.crypto.model.entities.Currency;
 import by.watcher.crypto.model.entities.Price;
@@ -33,7 +34,8 @@ public class ScheduleTask {
 
     @Scheduled(fixedRate = 60000)
     public void getCoinLoreInfo() {
-            List<Currency> currencies = currencyService.getAll();
+        List<Currency> currencies = currencyService.getAll();
+        try {
             List<CoinLoreCurrency> coinLoreCurrencies = coinLoreService.getAllCurrencyFromList(currencies);
             List<Price> prices = new ArrayList<>();
             for (int i = 0; i < currencies.size(); i++) {
@@ -42,5 +44,8 @@ public class ScheduleTask {
                 prices.add(new Price(id, price));
             }
             priceService.saveAll(prices);
+        } catch (ApiException e) {
+            LOGGER.error(e);
+        }
     }
 }

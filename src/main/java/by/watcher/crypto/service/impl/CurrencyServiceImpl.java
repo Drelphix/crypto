@@ -18,8 +18,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     public List<Currency> getAll() {
-        List<Currency> currencyList = new ArrayList<>();
-        currencyList.addAll(currencyRepository);
+        List<Currency> currencyList = new ArrayList<>(currencyRepository);
         return currencyList;
     }
 

@@ -1,4 +1,4 @@
-package by.watcher.crypto.viev;
+package by.watcher.crypto.view;
 
 public class PriceView {
 
